@@ -1,46 +1,48 @@
-# Buddy PWA — MVP v1
+# BuddyIO — Version 2A
 
-Buddy is an offline-capable, installable iPhone/Android web app. No account, API key, build tools, or paid service is required to run it.
+A privacy-focused, offline-capable Progressive Web App for iPhone and Android. This version builds directly on BuddyIO Version 1.
 
-## Features
-- Daily dashboard with customizable activities and goal motivations
-- Time selection, rescheduling, completed/skipped status
-- Randomized pre-check-in window (while app is open)
-- Branching coaching conversations based on readiness and obstacles
-- Local activity history, 7-day progress visualization, streaks
-- LocalStorage persistence, offline app shell, installable manifest
-- Quiet hours and in-app check-in toggle
+## What's new
 
-## Fastest way to open on iPhone
-1. Create a **free GitHub repository** and upload the contents of this folder to its root (not the ZIP itself).
-2. In the repository, open **Settings → Pages**, select **Deploy from a branch**, branch **main**, folder **/(root)**, then save.
-3. Wait for GitHub Pages to publish the site. Its HTTPS address typically looks like `https://YOUR_USERNAME.github.io/REPOSITORY_NAME/`.
-4. Open the published URL in **Safari on iPhone**. Tap **Share → Add to Home Screen → Add**.
-5. Open Buddy from your Home Screen. Activities are saved locally in that installed app's storage.
+- Supportive, balanced, or direct coaching styles
+- Richer branching conversations for fatigue, time pressure, and motivation
+- User-defined reasons for goals, referenced in conversations
+- Randomized pre-check-ins in each activity's chosen lead-time window
+- Activity-time check-ins and up to two unanswered follow-ups (configurable)
+- Quiet hours and a four-hour cap on follow-ups
+- Event history used for lightweight, local personalization
+- Downloadable JSON backup under Settings → Export my Buddy data
 
-GitHub Pages is public hosting: the app source is public, but activity data is stored on each user's device, not in GitHub. Avoid entering sensitive information in a prototype. Browser data can be cleared by iOS or the user; there is no backup or sync.
+**Important limitation:** In-app check-ins run only when the PWA is open and visible. iOS does not allow this JavaScript timer to send notifications while the app is closed or locked. True push notifications require a backend scheduler and Web Push setup in Version 2B.
 
-## Test locally on Windows
-From the directory containing index.html:
+## Preserve your existing iPhone data
 
-```powershell
-python -m http.server 8080
-```
+The code deliberately uses the **same** localStorage key as V1: `buddy-pwa-data-v1`. It adds fields without clearing the original activities, logs, check-in records, or settings. Existing activities, history, and progress should remain after a same-origin deployment.
 
-Open http://localhost:8080 in a desktop browser. The service worker requires HTTPS or localhost.
+**Do not** uninstall the Home Screen app, clear Safari website data, use a different GitHub Pages address, or click **Erase all Buddy data** if you want to keep existing information. iOS may partition storage by installation/browser context; test in the same Home Screen installation you already use. For added safety, preserve a copy of your old GitHub commit and, after updating, export a backup from Settings.
 
-## Limitations
-- **No background push notifications.** In-app check-ins run while the app is open, including when it is brought back to the foreground. iOS will suspend the app when backgrounded; check-ins are not guaranteed to appear at the intended time.
-- Check-ins are not a substitute for iOS notification alerts.
-- Random pre-check-in times are created per activity per day; they are generated when the app runs, so opening the app late may miss an earlier check-in.
-- No cloud sync, account, or data export; data is local to the browser/app installation.
-- Coaching is rules-based, not generative AI. The coaching-style preference is saved for future personalization but does not yet change dialogue text.
-- This is a prototype, not production-tested software.
+## Update your GitHub Pages site
 
-## Files
-- `index.html` — interface shell
-- `style.css` — responsive visual styling
-- `app.js` — application logic and local storage
-- `sw.js` — offline caching service worker
-- `manifest.webmanifest` — install metadata
-- `icons/` — home-screen icons
+Repository: https://github.com/luismongefallas/BuddyIO
+
+1. Download and extract the Version 2A ZIP.
+2. Open the `buddyio_v2a` folder inside the extracted archive.
+3. Open your GitHub repository's **Code** tab and select **Add file → Upload files**.
+4. Drag the **contents** of `buddyio_v2a` into the upload area. Upload `index.html`, `app.js`, `style.css`, `sw.js`, `manifest.webmanifest`, `README.md`, and the `icons` folder. Do **not** upload the ZIP or nest the files in an extra folder.
+5. GitHub may warn about files with the same names. Confirm replacing the existing files, then click **Commit changes**. If the web upload flow won't overwrite files, edit or delete the existing files first, then upload the replacements and commit.
+6. Go to **Actions** and wait for the GitHub Pages deployment to succeed.
+7. Visit https://luismongefallas.github.io/BuddyIO/ and refresh. On iPhone, fully close and reopen the installed app if necessary. The service worker cache version changed to `buddy-v2a.0.1`.
+
+## Suggested tests
+
+1. Verify all existing activities and history remain.
+2. Set an activity for 30–60 minutes from now; set its advance window to 30 minutes. Keep the app open and visible to test the check-in.
+3. Choose **I'm unsure → Low energy → Try a smaller step**.
+4. Change the time and confirm the new time appears on the dashboard.
+5. Open **Settings** and change the coaching style and follow-up limit.
+6. Mark the activity complete and confirm it doesn't receive further follow-ups.
+7. Export a JSON backup.
+
+## Technical notes
+
+No server, account, paid APIs, or analytics. User data remains in localStorage on that browser installation. This is a client-side MVP, not a guaranteed notification or medical/wellness intervention system.
